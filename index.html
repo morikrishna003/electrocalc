@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ElectroCalc - Professional Electrical Calculators</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header>
+        <h1>⚡ ElectroCalc</h1>
+        <p>Your Professional Electrical Toolkit</p>
+    </header>
+
+    <main>
+        <!-- WORKING SEARCH BAR -->
+        <div class="search-container">
+            <input type="text" id="searchInput" class="search-box" placeholder="🔍 Search calculators (e.g. Ohm, Power, Current...)">
+        </div>
+
+        <div class="calculator-list" id="calcList">
+            
+            <a href="calculators/ohms-law.html" class="menu-card">
+                <div class="card-icon">🧲</div>
+                <div class="card-content">
+                    <h3>Ohm's Law Calculator</h3>
+                    <p>Calculate Voltage (V), Current (I), or Resistance (R)</p>
+                </div>
+            </a>
+
+            <a href="calculators/kw-hp.html" class="menu-card">
+                <div class="card-icon">🔄</div>
+                <div class="card-content">
+                    <h3>kW ↔ HP Converter</h3>
+                    <p>Convert Power between Kilowatts and Horsepower</p>
+                </div>
+            </a>
+
+            <a href="calculators/1-phase-current.html" class="menu-card">
+                <div class="card-icon">🔌</div>
+                <div class="card-content">
+                    <h3>1-Phase Current</h3>
+                    <p>Calculate Single Phase AC Current (Amps)</p>
+                </div>
+            </a>
+
+            <a href="calculators/3-phase-current.html" class="menu-card">
+                <div class="card-icon">🏭</div>
+                <div class="card-content">
+                    <h3>3-Phase Current</h3>
+                    <p>Calculate Three Phase AC Current (Amps)</p>
+                </div>
+            </a>
+
+            <a href="calculators/power-calculator.html" class="menu-card">
+                <div class="card-icon">⚡</div>
+                <div class="card-content">
+                    <h3>Power Calculator</h3>
+                    <p>Calculate Power (W, kW) for DC, 1-Phase & 3-Phase</p>
+                </div>
+            </a>
+
+            <a href="calculators/energy-calculator.html" class="menu-card">
+                <div class="card-icon">💡</div>
+                <div class="card-content">
+                    <h3>Energy & Cost</h3>
+                    <p>Calculate Electricity usage (kWh) and Total Bill</p>
+                </div>
+            </a>
+
+            <a href="calculators/transformer-calculator.html" class="menu-card">
+                <div class="card-icon">🔋</div>
+                <div class="card-content">
+                    <h3>Transformer Calculator</h3>
+                    <p>Calculate Primary/Secondary Voltage, Current & Turns</p>
+                </div>
+            </a>
+
+                      <a href="calculators/voltage-drop.html" class="menu-card">
+                <div class="card-icon">📉</div>
+                <div class="card-content">
+                    <h3>Voltage Drop Calculator</h3>
+                    <p>Calculate Cable Voltage Drop & Percentage</p>
+                </div>
+            </a>
+
+                      <a href="calculators/motor-current.html" class="menu-card">
+                <div class="card-icon">⚙️</div>
+                <div class="card-content">
+                    <h3>Motor Current Calculator</h3>
+                    <p>Calculate Full Load Amps (FLA) of Motors</p>
+                </div>
+            </a>
+
+                      <a href="calculators/power-factor.html" class="menu-card">
+                <div class="card-icon">📐</div>
+                <div class="card-content">
+                    <h3>Power Factor Calculator</h3>
+                    <p>Calculate Power Factor (PF) from kW and kVA</p>
+                </div>
+            </a>
+
+                      <a href="calculators/resistance-calc.html" class="menu-card">
+                <div class="card-icon">🎛️</div>
+                <div class="card-content">
+                    <h3>Resistance Calculator</h3>
+                    <p>Calculate Series & Parallel Resistors</p>
+                </div>
+            </a>
+
+                      <a href="calculators/bill-calculator.html" class="menu-card">
+                <div class="card-icon">🧾</div>
+                <div class="card-content">
+                    <h3>Electricity Bill Calculator</h3>
+                    <p>Calculate Home Bill using Rate Slabs</p>
+                </div>
+            </a>
+
+                      <a href="calculators/short-circuit.html" class="menu-card">
+                <div class="card-icon">💥</div>
+                <div class="card-content">
+                    <h3>Short-Circuit Calculator</h3>
+                    <p>Calculate Transformer Short-Circuit Current (Isc)</p>
+                </div>
+            </a>
+
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 ElectroCalc. All Rights Reserved.</p>
+    </footer>
+
+    <!-- Search Bar ne kam kartu karva mate nu logic -->
+    <script>
+        document.getElementById('searchInput').addEventListener('keyup', function() {
+            let filter = this.value.toLowerCase();
+            let cards = document.querySelectorAll('.menu-card');
+            
+            cards.forEach(card => {
+                let text = card.innerText.toLowerCase();
+                if (text.includes(filter)) {
+                    card.style.display = "flex";
+                } else {
+                    card.style.display = "none";
+                }
+            });
+        });
+    </script>
+</body>
+</html>
