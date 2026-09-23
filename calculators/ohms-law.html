@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ohm's Law Calculator - ElectroCalc</title>
+    <!-- અહી ../ નો અર્થ એ છે કે ફોલ્ડરની બહાર નીકળીને css ફોલ્ડરમાં જવું -->
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <header>
+        <h1>ElectroCalc</h1>
+        <!-- હોમ પેજ પર પાછા જવા માટેની લિંક -->
+        <p><a href="../index.html" style="color: #cce5ff; text-decoration: none;">&larr; Back to Home</a></p>
+    </header>
+
+    <main>
+        <h2>Ohm's Law Calculator</h2>
+        
+        <div class="calc-card">
+            <label><strong>What do you want to calculate?</strong></label>
+            <select id="calc-type" style="width: 100%; padding: 10px; margin: 10px 0; border-radius: 5px; border: 1px solid #ccc; font-size: 16px;">
+                <option value="v">Voltage (V)</option>
+                <option value="i">Current (I)</option>
+                <option value="r">Resistance (R)</option>
+            </select>
+
+            <div style="margin-top: 15px;">
+                <label id="label1">Current (I) in Amps:</label>
+                <input type="number" id="input1" placeholder="Enter value" style="width: 100%; padding: 10px; margin-top: 5px; border-radius: 5px; border: 1px solid #ccc; font-size: 16px;">
+            </div>
+
+            <div style="margin-top: 15px;">
+                <label id="label2">Resistance (R) in Ohms:</label>
+                <input type="number" id="input2" placeholder="Enter value" style="width: 100%; padding: 10px; margin-top: 5px; border-radius: 5px; border: 1px solid #ccc; font-size: 16px;">
+            </div>
+
+            <button onclick="calculateOhmsLaw()" style="width: 100%; padding: 12px; margin-top: 20px; background-color: #0056b3; color: white; border: none; border-radius: 5px; font-size: 16px; cursor: pointer; font-weight: bold;">Calculate</button>
+
+            <!-- રિઝલ્ટ બતાવવા માટેનું બોક્સ -->
+            <div id="result-box" style="margin-top: 20px; padding: 15px; background-color: #e2f0d9; border: 1px solid #c3e6cb; border-radius: 5px; text-align: center; font-size: 20px; font-weight: bold; color: #155724; display: none;">
+                <!-- રિઝલ્ટ અહીં દેખાશે -->
+            </div>
+        </div>
+
+        <!-- સૂત્ર (Formula) સમજાવવા માટેનું સેક્શન -->
+        <div class="calc-card" style="margin-top: 20px;">
+            <h3 style="margin-bottom: 15px;">📖 Formula </h3>
+            <p><strong>Voltage (V)</strong> = I &times; R</p>
+            <p><strong>Current (I)</strong> = V &divide; R</p>
+            <p><strong>Resistance (R)</strong> = V &divide; I</p>
+            <hr style="margin: 15px 0; border: 0; border-top: 1px solid #eee;">
+            <p style="font-size: 14px; color: #555;"><strong>V</strong> = Voltage (Volts)<br><strong>I</strong> = Current (Amps)<br><strong>R</strong> = Resistance (Ohms, &Omega;)</p>
+        </div>
+    </main>
+
+    <script>
+        // --- JavaScript (ગણતરી માટેનો કોડ) ---
+        const calcType = document.getElementById('calc-type');
+        const label1 = document.getElementById('label1');
+        const label2 = document.getElementById('label2');
+        const input1 = document.getElementById('input1');
+        const input2 = document.getElementById('input2');
+        const resultBox = document.getElementById('result-box');
+
+        // જ્યારે યુઝર ડ્રોપડાઉન બદલે, ત્યારે લેબલના નામ બદલાશે
+        calcType.addEventListener('change', function() {
+            input1.value = ''; // જૂની વેલ્યુ સાફ કરવા
+            input2.value = '';
+            resultBox.style.display = 'none'; // રિઝલ્ટ બોક્સ છુપાવવા
+
+            if (this.value === 'v') {
+                label1.innerText = 'Current (I) in Amps:';
+                label2.innerText = 'Resistance (R) in Ohms:';
+            } else if (this.value === 'i') {
+                label1.innerText = 'Voltage (V) in Volts:';
+                label2.innerText = 'Resistance (R) in Ohms:';
+            } else if (this.value === 'r') {
+                label1.innerText = 'Voltage (V) in Volts:';
+                label2.innerText = 'Current (I) in Amps:';
+            }
+        });
+
+        // Calculate બટન દબાવવા પર થતી ગણતરી
+        function calculateOhmsLaw() {
+            const type = calcType.value;
+            const val1 = parseFloat(input1.value);
+            const val2 = parseFloat(input2.value);
+
+            // જો યુઝર ખાલી બોક્સમાં Calculate દબાવે તો એરર બતાવશે
+            if (isNaN(val1) || isNaN(val2)) {
+                alert("Please enter valid numbers in both fields!");
+                return;
+            }
+
+            let resultText = "";
+
+            // ગણતરી ના સૂત્રો
+            if (type === 'v') {
+                const voltage = val1 * val2; // V = I * R
+                resultText = `Result: ${voltage.toFixed(2)} Volts (V)`;
+            } else if (type === 'i') {
+                if (val2 === 0) { alert("Resistance zero ન હોઈ શકે!"); return; }
+                const current = val1 / val2; // I = V / R
+                resultText = `Result: ${current.toFixed(2)} Amps (A)`;
+            } else if (type === 'r') {
+                if (val2 === 0) { alert("Current zero ન હોઈ શકે!"); return; }
+                const resistance = val1 / val2; // R = V / I
+                resultText = `Result: ${resistance.toFixed(2)} Ohms (&Omega;)`;
+            }
+
+            // રિઝલ્ટ બોક્સમાં જવાબ બતાવો
+            resultBox.innerHTML = resultText;
+            resultBox.style.display = 'block';
+        }
+    </script>
+</body>
+</html>
