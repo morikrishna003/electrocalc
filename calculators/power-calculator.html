@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Power Calculator - ElectroCalc</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <header>
+        <h1>ElectroCalc</h1>
+        <p><a href="../index.html" style="color: #cce5ff; text-decoration: none;">&larr; Back to Home</a></p>
+    </header>
+
+    <main>
+        <h2>Power Calculator</h2>
+        
+        <div class="calc-card">
+            
+            <div style="margin-top: 10px;">
+                <label><strong>Circuit Type:</strong></label>
+                <select id="circuit-type" style="width: 100%; padding: 10px; margin-top: 5px; margin-bottom: 15px; border-radius: 5px; border: 1px solid #ccc; font-size: 16px;">
+                    <option value="dc">DC Circuit</option>
+                    <option value="ac1">AC 1-Phase</option>
+                    <option value="ac3">AC 3-Phase</option>
+                </select>
+            </div>
+
+            <div>
+                <label>Voltage (V):</label>
+                <input type="number" id="input-voltage" placeholder="e.g. 230" style="width: 100%; padding: 10px; margin-top: 5px; margin-bottom: 15px; border-radius: 5px; border: 1px solid #ccc; font-size: 16px;">
+            </div>
+
+            <div>
+                <label>Current (I) in Amps:</label>
+                <input type="number" id="input-current" placeholder="e.g. 10" style="width: 100%; padding: 10px; margin-top: 5px; margin-bottom: 15px; border-radius: 5px; border: 1px solid #ccc; font-size: 16px;">
+            </div>
+
+            <!-- આ બોક્સ માત્ર AC સિલેક્ટ કરવા પર જ દેખાશે -->
+            <div id="pf-section" style="display: none;">
+                <label>Power Factor (pf):</label>
+                <input type="number" id="input-pf" placeholder="e.g. 0.8" step="0.01" min="0.1" max="1" style="width: 100%; padding: 10px; margin-top: 5px; margin-bottom: 15px; border-radius: 5px; border: 1px solid #ccc; font-size: 16px;">
+            </div>
+
+            <button onclick="calculatePower()" style="width: 100%; padding: 12px; margin-top: 10px; background-color: #0056b3; color: white; border: none; border-radius: 5px; font-size: 16px; cursor: pointer; font-weight: bold;">Calculate Power</button>
+
+            <!-- રિઝલ્ટ બોક્સ -->
+            <div id="result-box" style="margin-top: 20px; padding: 15px; background-color: #e2f0d9; border: 1px solid #c3e6cb; border-radius: 5px; text-align: center; font-size: 18px; font-weight: bold; color: #155724; display: none;">
+            </div>
+        </div>
+
+        <!-- Formula સેક્શન -->
+        <div class="calc-card" style="margin-top: 20px;">
+            <h3 style="margin-bottom: 15px;">📖 Formula </h3>
+            <p><strong>DC Power:</strong> P = V &times; I</p>
+            <p><strong>AC 1-Phase:</strong> P = V &times; I &times; pf</p>
+            <p><strong>AC 3-Phase:</strong> P = &radic;3 &times; V &times; I &times; pf</p>
+            <hr style="margin: 15px 0; border: 0; border-top: 1px solid #eee;">
+            <p style="font-size: 14px; color: #555;"><strong>P</strong> = Power in Watts (W)</p>
+        </div>
+    </main>
+
+    <script>
+        const circuitType = document.getElementById('circuit-type');
+        const pfSection = document.getElementById('pf-section');
+        const inputVoltage = document.getElementById('input-voltage');
+        const inputCurrent = document.getElementById('input-current');
+        const inputPf = document.getElementById('input-pf');
+        const resultBox = document.getElementById('result-box');
+
+        // ડ્રોપડાઉન બદલવા પર Power Factor નું બોક્સ બતાવવું કે છુપાવવું
+        circuitType.addEventListener('change', function() {
+            if (this.value === 'dc') {
+                pfSection.style.display = 'none'; // DC માં pf ની જરૂર નથી
+            } else {
+                pfSection.style.display = 'block'; // AC માં pf ની જરૂર પડે
+                inputPf.value = '0.8'; // AC માટે default 0.8 વેલ્યુ
+            }
+            resultBox.style.display = 'none'; // જૂનું રિઝલ્ટ છુપાવવા
+        });
+
+        function calculatePower() {
+            const type = circuitType.value;
+            const v = parseFloat(inputVoltage.value);
+            const i = parseFloat(inputCurrent.value);
+            let pf = parseFloat(inputPf.value);
+
+            if (isNaN(v) || isNaN(i)) {
+                alert("Please enter Voltage and Current!");
+                return;
+            }
+            if (type !== 'dc' && isNaN(pf)) {
+                alert("Please enter Power Factor for AC circuit!");
+                return;
+            }
+
+            let powerW = 0; // પાવર (Watts)
+
+            if (type === 'dc') {
+                powerW = v * i;
+            } else if (type === 'ac1') {
+                powerW = v * i * pf;
+            } else if (type === 'ac3') {
+                const root3 = 1.732;
+                powerW = root3 * v * i * pf;
+            }
+
+            const powerKW = powerW / 1000; // Watts ને Kilowatts માં ફેરવ્યા
+
+            resultBox.innerHTML = `Power (P):<br><span style="font-size: 24px;">${powerW.toFixed(2)} W</span><br><span style="color: #444; font-size: 16px;">or ${powerKW.toFixed(4)} kW</span>`;
+            resultBox.style.display = 'block';
+        }
+    </script>
+</body>
+</html>
