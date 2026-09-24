@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>1-Phase Current Calculator - ElectroCalc</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <header>
+        <h1>ElectroCalc</h1>
+        <p><a href="../index.html" style="color: #cce5ff; text-decoration: none;">&larr; Back to Home</a></p>
+    </header>
+
+    <main>
+        <h2>1-Phase AC Current Calculator</h2>
+        
+        <div class="calc-card">
+            
+            <div style="margin-top: 10px;">
+                <label><strong>Power Unit:</strong></label>
+                <select id="power-unit" style="width: 100%; padding: 10px; margin-top: 5px; border-radius: 5px; border: 1px solid #ccc; font-size: 16px;">
+                    <option value="kw">Kilowatts (kW)</option>
+                    <option value="w">Watts (W)</option>
+                </select>
+            </div>
+
+            <div style="margin-top: 15px;">
+                <label>Enter Power (P):</label>
+                <input type="number" id="input-power" placeholder="e.g. 5" style="width: 100%; padding: 10px; margin-top: 5px; border-radius: 5px; border: 1px solid #ccc; font-size: 16px;">
+            </div>
+
+            <div style="margin-top: 15px;">
+                <label>Enter Voltage (V):</label>
+                <input type="number" id="input-voltage" placeholder="e.g. 230" style="width: 100%; padding: 10px; margin-top: 5px; border-radius: 5px; border: 1px solid #ccc; font-size: 16px;">
+            </div>
+
+            <div style="margin-top: 15px;">
+                <label>Power Factor (pf):</label>
+                <input type="number" id="input-pf" placeholder="e.g. 0.8" step="0.01" min="0.1" max="1" style="width: 100%; padding: 10px; margin-top: 5px; border-radius: 5px; border: 1px solid #ccc; font-size: 16px;">
+                <p style="font-size: 12px; color: #666; margin-top: 5px;">*Usually between 0.8 and 1 for residential/commercial appliances.</p>
+            </div>
+
+            <button onclick="calculateCurrent()" style="width: 100%; padding: 12px; margin-top: 20px; background-color: #0056b3; color: white; border: none; border-radius: 5px; font-size: 16px; cursor: pointer; font-weight: bold;">Calculate Current (A)</button>
+
+            <!-- રિઝલ્ટ બોક્સ -->
+            <div id="result-box" style="margin-top: 20px; padding: 15px; background-color: #e2f0d9; border: 1px solid #c3e6cb; border-radius: 5px; text-align: center; font-size: 20px; font-weight: bold; color: #155724; display: none;">
+            </div>
+        </div>
+
+        <!-- Formula સેક્શન -->
+        <div class="calc-card" style="margin-top: 20px;">
+            <h3 style="margin-bottom: 15px;">📖 Formula </h3>
+            <p><strong>If Power is in Watts (W):</strong><br> I = P &divide; (V &times; pf)</p>
+            <p style="margin-top: 10px;"><strong>If Power is in Kilowatts (kW):</strong><br> I = (P &times; 1000) &divide; (V &times; pf)</p>
+            <hr style="margin: 15px 0; border: 0; border-top: 1px solid #eee;">
+            <p style="font-size: 14px; color: #555;"><strong>I</strong> = Current in Amps (A)<br><strong>P</strong> = Power<br><strong>V</strong> = Voltage in Volts (V)<br><strong>pf</strong> = Power Factor</p>
+        </div>
+    </main>
+
+    <script>
+        function calculateCurrent() {
+            const unit = document.getElementById('power-unit').value;
+            const power = parseFloat(document.getElementById('input-power').value);
+            const voltage = parseFloat(document.getElementById('input-voltage').value);
+            const pf = parseFloat(document.getElementById('input-pf').value);
+            const resultBox = document.getElementById('result-box');
+
+            // વેલિડેશન: યુઝરે બધી વેલ્યુ નાખી છે કે નહીં તે ચેક કરવા
+            if (isNaN(power) || isNaN(voltage) || isNaN(pf)) {
+                alert("Please enter valid numbers in all fields!");
+                return;
+            }
+            if (voltage === 0 || pf === 0) {
+                alert("Voltage and Power Factor cannot be zero!");
+                return;
+            }
+
+            // પાવર જો kW માં હોય તો તેને Watts માં ફેરવવો
+            let powerInWatts = power;
+            if (unit === 'kw') {
+                powerInWatts = power * 1000;
+            }
+
+            // ગણતરી: I = P / (V * pf)
+            const current = powerInWatts / (voltage * pf);
+
+            // રિઝલ્ટ બતાવવું
+            resultBox.innerHTML = `Result: ${current.toFixed(2)} Amps (A)`;
+            resultBox.style.display = 'block';
+        }
+    </script>
+</body>
+</html>
