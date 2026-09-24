@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Power Factor Calculator - ElectroCalc</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <header>
+        <h1>⚡ ElectroCalc</h1>
+        <p><a href="../index.html" style="color: #cce5ff; text-decoration: none;">&larr; Back to Home</a></p>
+    </header>
+
+    <main>
+        <h2>Power Factor Calculator</h2>
+        
+        <div class="calc-card">
+            
+            <label>Real Power (kW):</label>
+            <input type="number" id="kw" placeholder="e.g. 10">
+
+            <label>Apparent Power (kVA):</label>
+            <input type="number" id="kva" placeholder="e.g. 12.5">
+
+            <button onclick="calculatePF()">Calculate Power Factor</button>
+
+            <!-- રિઝલ્ટ બોક્સ -->
+            <div id="result-box" style="margin-top: 20px; padding: 15px; background-color: #eff6ff; border: 1px solid #bfdbfe; border-radius: 8px; text-align: center; color: #1e3a8a; display: none;">
+            </div>
+        </div>
+
+        <!-- Formula સેક્શન -->
+        <div class="calc-card">
+            <h3 style="color: #1e3a8a; margin-bottom: 10px;">📖 Formula </h3>
+            <p><strong>Power Factor (PF)</strong> = Real Power (kW) &divide; Apparent Power (kVA)</p>
+            <hr style="margin: 15px 0; border-top: 1px solid #e2e8f0;">
+            <p style="font-size: 13px; color: #64748b;">
+                * PF is always between 0 and 1. A PF close to 1 indicates high efficiency.
+            </p>
+        </div>
+    </main>
+
+    <script>
+        function calculatePF() {
+            const kw = parseFloat(document.getElementById('kw').value);
+            const kva = parseFloat(document.getElementById('kva').value);
+            const resultBox = document.getElementById('result-box');
+
+            if (isNaN(kw) || isNaN(kva) || kva === 0) {
+                alert("Please enter valid numbers. kVA cannot be zero.");
+                return;
+            }
+
+            if (kw > kva) {
+                alert("Real Power (kW) cannot be greater than Apparent Power (kVA).");
+                return;
+            }
+
+            const pf = kw / kva;
+
+            resultBox.innerHTML = `
+                <div style="font-size: 16px; margin-bottom: 8px;">Power Factor:</div>
+                <div style="font-size: 28px; font-weight: bold;">${pf.toFixed(3)}</div>
+            `;
+            resultBox.style.display = 'block';
+        }
+    </script>
+</body>
+</html>
