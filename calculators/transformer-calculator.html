@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transformer Calculator - ElectroCalc</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <header>
+        <h1>ElectroCalc</h1>
+        <p><a href="../index.html" style="color: #cce5ff; text-decoration: none;">&larr; Back to Home</a></p>
+    </header>
+
+    <main>
+        <h2>Transformer Calculator</h2>
+        
+        <div class="calc-card">
+            
+            <div style="margin-top: 10px;">
+                <label><strong>What to Calculate?</strong></label>
+                <select id="calc-type" style="width: 100%; padding: 10px; margin-top: 5px; margin-bottom: 15px; border-radius: 5px; border: 1px solid #ccc; font-size: 16px;">
+                    <option value="vs">Secondary Voltage (Vs)</option>
+                    <option value="vp">Primary Voltage (Vp)</option>
+                    <option value="ns">Secondary Turns (Ns)</option>
+                    <option value="np">Primary Turns (Np)</option>
+                    <option value="is">Secondary Current (Is)</option>
+                    <option value="ip">Primary Current (Ip)</option>
+                </select>
+            </div>
+
+            <div id="input-group-1">
+                <label id="label-1">Primary Voltage (Vp):</label>
+                <input type="number" id="input-1" placeholder="Enter value" style="width: 100%; padding: 10px; margin-top: 5px; margin-bottom: 15px; border-radius: 5px; border: 1px solid #ccc; font-size: 16px;">
+            </div>
+
+            <div id="input-group-2">
+                <label id="label-2">Primary Turns (Np):</label>
+                <input type="number" id="input-2" placeholder="Enter value" style="width: 100%; padding: 10px; margin-top: 5px; margin-bottom: 15px; border-radius: 5px; border: 1px solid #ccc; font-size: 16px;">
+            </div>
+
+            <div id="input-group-3">
+                <label id="label-3">Secondary Turns (Ns):</label>
+                <input type="number" id="input-3" placeholder="Enter value" style="width: 100%; padding: 10px; margin-top: 5px; margin-bottom: 15px; border-radius: 5px; border: 1px solid #ccc; font-size: 16px;">
+            </div>
+
+            <button onclick="calculateTransformer()" style="width: 100%; padding: 12px; margin-top: 10px; background-color: #0056b3; color: white; border: none; border-radius: 5px; font-size: 16px; cursor: pointer; font-weight: bold;">Calculate</button>
+
+            <!-- રિઝલ્ટ બોક્સ -->
+            <div id="result-box" style="margin-top: 20px; padding: 15px; background-color: #e2f0d9; border: 1px solid #c3e6cb; border-radius: 5px; text-align: center; font-size: 18px; color: #155724; display: none;">
+            </div>
+        </div>
+
+        <!-- Formula સેક્શન -->
+        <div class="calc-card" style="margin-top: 20px;">
+            <h3 style="margin-bottom: 15px;">📖 Formula </h3>
+            <p><strong>Voltage & Turns:</strong> (Vs &divide; Vp) = (Ns &divide; Np)</p>
+            <p><strong>Current & Voltage:</strong> (Ip &divide; Is) = (Vs &divide; Vp)</p>
+            <hr style="margin: 15px 0; border: 0; border-top: 1px solid #eee;">
+            <p style="font-size: 14px; color: #555;">
+                <strong>V</strong> = Voltage | <strong>N</strong> = Turns | <strong>I</strong> = Current<br>
+                <strong>p</strong> = Primary | <strong>s</strong> = Secondary
+            </p>
+        </div>
+    </main>
+
+    <script>
+        const calcType = document.getElementById('calc-type');
+        const label1 = document.getElementById('label-1');
+        const label2 = document.getElementById('label-2');
+        const label3 = document.getElementById('label-3');
+        const input1 = document.getElementById('input-1');
+        const input2 = document.getElementById('input-2');
+        const input3 = document.getElementById('input-3');
+        const resultBox = document.getElementById('result-box');
+
+        // ડ્રોપડાઉન બદલવા પર લેબલ બદલાશે
+        calcType.addEventListener('change', function() {
+            input1.value = '';
+            input2.value = '';
+            input3.value = '';
+            resultBox.style.display = 'none';
+
+            if (this.value === 'vs') {
+                label1.innerText = 'Primary Voltage (Vp):';
+                label2.innerText = 'Primary Turns (Np):';
+                label3.innerText = 'Secondary Turns (Ns):';
+            } else if (this.value === 'vp') {
+                label1.innerText = 'Secondary Voltage (Vs):';
+                label2.innerText = 'Primary Turns (Np):';
+                label3.innerText = 'Secondary Turns (Ns):';
+            } else if (this.value === 'ns') {
+                label1.innerText = 'Primary Voltage (Vp):';
+                label2.innerText = 'Secondary Voltage (Vs):';
+                label3.innerText = 'Primary Turns (Np):';
+            } else if (this.value === 'np') {
+                label1.innerText = 'Primary Voltage (Vp):';
+                label2.innerText = 'Secondary Voltage (Vs):';
+                label3.innerText = 'Secondary Turns (Ns):';
+            } else if (this.value === 'is') {
+                label1.innerText = 'Primary Current (Ip):';
+                label2.innerText = 'Primary Voltage (Vp):';
+                label3.innerText = 'Secondary Voltage (Vs):';
+            } else if (this.value === 'ip') {
+                label1.innerText = 'Secondary Current (Is):';
+                label2.innerText = 'Primary Voltage (Vp):';
+                label3.innerText = 'Secondary Voltage (Vs):';
+            }
+        });
+
+        function calculateTransformer() {
+            const type = calcType.value;
+            const val1 = parseFloat(input1.value);
+            const val2 = parseFloat(input2.value);
+            const val3 = parseFloat(input3.value);
+
+            if (isNaN(val1) || isNaN(val2) || isNaN(val3)) {
+                alert("Please enter valid numbers in all fields!");
+                return;
+            }
+
+            let resultValue = 0;
+            let resultUnit = "";
+            let resultLabel = "";
+
+            if (type === 'vs') {
+                resultValue = (val1 * val3) / val2; 
+                resultLabel = "Secondary Voltage (Vs)";
+                resultUnit = "Volts (V)";
+            } else if (type === 'vp') { 
+                resultValue = (val1 * val2) / val3; 
+                resultLabel = "Primary Voltage (Vp)";
+                resultUnit = "Volts (V)";
+            } else if (type === 'ns') { 
+                resultValue = (val2 * val3) / val1; 
+                resultLabel = "Secondary Turns (Ns)";
+                resultUnit = "Turns";
+            } else if (type === 'np') { 
+                resultValue = (val1 * val3) / val2; 
+                resultLabel = "Primary Turns (Np)";
+                resultUnit = "Turns";
+            } else if (type === 'is') { 
+                // Is = (Ip * Vp) / Vs
+                resultValue = (val1 * val2) / val3; 
+                resultLabel = "Secondary Current (Is)";
+                resultUnit = "Amps (A)";
+            } else if (type === 'ip') { 
+                // Ip = (Is * Vs) / Vp
+                resultValue = (val1 * val3) / val2; 
+                resultLabel = "Primary Current (Ip)";
+                resultUnit = "Amps (A)";
+            }
+
+            resultBox.innerHTML = `<strong>${resultLabel}:</strong><br><span style="font-size: 24px;">${resultValue.toFixed(2)} ${resultUnit}</span>`;
+            resultBox.style.display = 'block';
+        }
+    </script>
+</body>
+</html>
