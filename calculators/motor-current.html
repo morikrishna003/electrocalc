@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Motor Current Calculator - ElectroCalc</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <header>
+        <h1>⚡ ElectroCalc</h1>
+        <p><a href="../index.html" style="color: #cce5ff; text-decoration: none;">&larr; Back to Home</a></p>
+    </header>
+
+    <main>
+        <h2>Motor Current (FLA) Calculator</h2>
+        
+        <div class="calc-card">
+            
+            <label>Motor Power:</label>
+            <div style="display: flex; gap: 10px;">
+                <input type="number" id="power" placeholder="e.g. 10" style="flex: 2;">
+                <select id="power-unit" style="flex: 1;">
+                    <option value="hp">HP</option>
+                    <option value="kw">kW</option>
+                </select>
+            </div>
+
+            <label>Phase Type:</label>
+            <select id="phase">
+                <option value="3">3-Phase</option>
+                <option value="1">1-Phase</option>
+            </select>
+
+            <label>Voltage (V):</label>
+            <input type="number" id="voltage" placeholder="e.g. 415 or 230">
+
+            <label>Power Factor (pf):</label>
+            <input type="number" id="pf" placeholder="e.g. 0.85" step="0.01" min="0.1" max="1">
+
+            <label>Motor Efficiency (%):</label>
+            <input type="number" id="eff" placeholder="e.g. 90" max="100">
+
+            <button onclick="calculateMotorCurrent()">Calculate Current (FLA)</button>
+
+            <!-- રિઝલ્ટ બોક્સ -->
+            <div id="result-box" style="margin-top: 20px; padding: 15px; background-color: #eff6ff; border: 1px solid #bfdbfe; border-radius: 8px; text-align: center; color: #1e3a8a; display: none;">
+            </div>
+        </div>
+
+        <!-- Formula સેક્શન -->
+        <div class="calc-card">
+            <h3 style="color: #1e3a8a; margin-bottom: 10px;">📖 Formula </h3>
+            <p><strong>1-Phase:</strong> I = P<sub>watts</sub> &divide; (V &times; PF &times; &eta;)</p>
+            <p><strong>3-Phase:</strong> I = P<sub>watts</sub> &divide; (&radic;3 &times; V &times; PF &times; &eta;)</p>
+            <hr style="margin: 15px 0; border-top: 1px solid #e2e8f0;">
+            <p style="font-size: 13px; color: #64748b;">
+                <strong>&eta; (Efficiency)</strong> = % / 100<br>
+                <strong>1 HP</strong> = 746 Watts | <strong>1 kW</strong> = 1000 Watts
+            </p>
+        </div>
+    </main>
+
+    <script>
+        function calculateMotorCurrent() {
+            const power = parseFloat(document.getElementById('power').value);
+            const unit = document.getElementById('power-unit').value;
+            const phase = document.getElementById('phase').value;
+            const voltage = parseFloat(document.getElementById('voltage').value);
+            const pf = parseFloat(document.getElementById('pf').value);
+            const effPercent = parseFloat(document.getElementById('eff').value);
+            const resultBox = document.getElementById('result-box');
+
+            if (isNaN(power) || isNaN(voltage) || isNaN(pf) || isNaN(effPercent) || voltage === 0 || pf === 0 || effPercent === 0) {
+                alert("Please enter valid non-zero numbers in all fields.");
+                return;
+            }
+
+            // Efficiency % ને ડેસિમલ (દા.ત. 90% = 0.90) માં ફેરવો
+            const eff = effPercent / 100;
+
+            // Power ને Watts માં ફેરવો
+            let powerWatts = (unit === 'hp') ? (power * 746) : (power * 1000);
+
+            let current = 0;
+            if (phase === '1') {
+                current = powerWatts / (voltage * pf * eff);
+            } else {
+                const root3 = 1.732;
+                current = powerWatts / (root3 * voltage * pf * eff);
+            }
+
+            resultBox.innerHTML = `
+                <div style="font-size: 16px; margin-bottom: 8px;">Full Load Amps (FLA):</div>
+                <div style="font-size: 28px; font-weight: bold;">${current.toFixed(2)} A</div>
+            `;
+            resultBox.style.display = 'block';
+        }
+    </script>
+</body>
+</html>
