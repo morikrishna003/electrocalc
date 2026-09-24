@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voltage Drop Calculator - ElectroCalc</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <header>
+        <h1>⚡ ElectroCalc</h1>
+        <p><a href="../index.html" style="color: #cce5ff; text-decoration: none;">&larr; Back to Home</a></p>
+    </header>
+
+    <main>
+        <h2>Voltage Drop Calculator</h2>
+        
+        <div class="calc-card">
+            
+            <label>Cable Material:</label>
+            <select id="material">
+                <option value="cu">Copper (Cu)</option>
+                <option value="al">Aluminum (Al)</option>
+            </select>
+
+            <label>System Type:</label>
+            <select id="phase">
+                <option value="1">1-Phase AC / DC</option>
+                <option value="3">3-Phase AC</option>
+            </select>
+
+            <label>Source Voltage (V):</label>
+            <input type="number" id="voltage" placeholder="e.g. 230 or 415">
+
+            <label>Load Current (A):</label>
+            <input type="number" id="current" placeholder="e.g. 10">
+
+            <label>Cable Length (Meters):</label>
+            <input type="number" id="length" placeholder="e.g. 50">
+
+            <label>Cable Cross-Section Area (sq mm):</label>
+            <input type="number" id="area" placeholder="e.g. 2.5">
+
+            <button onclick="calculateVD()">Calculate Voltage Drop</button>
+
+            <!-- રિઝલ્ટ બોક્સ -->
+            <div id="result-box" style="margin-top: 20px; padding: 15px; background-color: #eff6ff; border: 1px solid #bfdbfe; border-radius: 8px; text-align: center; color: #1e3a8a; display: none;">
+            </div>
+        </div>
+
+        <!-- Formula સેક્શન -->
+        <div class="calc-card">
+            <h3 style="color: #1e3a8a; margin-bottom: 10px;">📖 Formula </h3>
+            <p><strong>1-Phase:</strong> V<sub>drop</sub> = (2 &times; &rho; &times; L &times; I) &divide; A</p>
+            <p><strong>3-Phase:</strong> V<sub>drop</sub> = (&radic;3 &times; &rho; &times; L &times; I) &divide; A</p>
+            <hr style="margin: 15px 0; border-top: 1px solid #e2e8f0;">
+            <p style="font-size: 13px; color: #64748b;">
+                <strong>&rho; (Rho)</strong> = Resistivity (Cu &approx; 0.0175, Al &approx; 0.0282)<br>
+                <strong>L</strong> = Length (m) | <strong>I</strong> = Current (A)<br>
+                <strong>A</strong> = Area (mm&sup2;)
+            </p>
+        </div>
+    </main>
+
+    <script>
+        function calculateVD() {
+            const material = document.getElementById('material').value;
+            const phase = document.getElementById('phase').value;
+            const voltage = parseFloat(document.getElementById('voltage').value);
+            const current = parseFloat(document.getElementById('current').value);
+            const length = parseFloat(document.getElementById('length').value);
+            const area = parseFloat(document.getElementById('area').value);
+            const resultBox = document.getElementById('result-box');
+
+            if (isNaN(voltage) || isNaN(current) || isNaN(length) || isNaN(area) || area === 0) {
+                alert("Please enter valid numbers. Area cannot be zero.");
+                return;
+            }
+
+            // Material Resistivity (ohm.mm2/m)
+            const rho = (material === 'cu') ? 0.0175 : 0.0282;
+            let vDrop = 0;
+
+            if (phase === '1') {
+                vDrop = (2 * rho * length * current) / area;
+            } else {
+                const root3 = 1.732;
+                vDrop = (root3 * rho * length * current) / area;
+            }
+
+            const dropPercentage = (vDrop / voltage) * 100;
+            const endVoltage = voltage - vDrop;
+
+            resultBox.innerHTML = `
+                <div style="font-size: 16px; margin-bottom: 8px;">Voltage Drop:</div>
+                <div style="font-size: 26px; font-weight: bold; margin-bottom: 15px;">${vDrop.toFixed(2)} V</div>
+                <div style="font-size: 14px; color: #475569;">
+                    <strong>Percentage Drop:</strong> ${dropPercentage.toFixed(2)}%<br>
+                    <strong>Voltage at End:</strong> ${endVoltage.toFixed(2)} V
+                </div>
+            `;
+            resultBox.style.display = 'block';
+        }
+    </script>
+</body>
+</html>
