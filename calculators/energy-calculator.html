@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Energy Calculator - ElectroCalc</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <header>
+        <h1>ElectroCalc</h1>
+        <p><a href="../index.html" style="color: #cce5ff; text-decoration: none;">&larr; Back to Home</a></p>
+    </header>
+
+    <main>
+        <h2>Energy & Cost Calculator</h2>
+        
+        <div class="calc-card">
+            
+            <div style="margin-top: 10px;">
+                <label>Power Unit:</label>
+                <select id="power-unit" style="width: 100%; padding: 10px; margin-top: 5px; margin-bottom: 15px; border-radius: 5px; border: 1px solid #ccc; font-size: 16px;">
+                    <option value="w">Watts (W)</option>
+                    <option value="kw">Kilowatts (kW)</option>
+                </select>
+            </div>
+
+            <div>
+                <label>Power (P):</label>
+                <input type="number" id="input-power" placeholder="e.g. 100" style="width: 100%; padding: 10px; margin-top: 5px; margin-bottom: 15px; border-radius: 5px; border: 1px solid #ccc; font-size: 16px;">
+            </div>
+
+            <div>
+                <label>Usage Time per day (Hours):</label>
+                <input type="number" id="input-hours" placeholder="e.g. 5" max="24" style="width: 100%; padding: 10px; margin-top: 5px; margin-bottom: 15px; border-radius: 5px; border: 1px solid #ccc; font-size: 16px;">
+            </div>
+
+            <div>
+                <label>Number of Days:</label>
+                <input type="number" id="input-days" placeholder="e.g. 30" style="width: 100%; padding: 10px; margin-top: 5px; margin-bottom: 15px; border-radius: 5px; border: 1px solid #ccc; font-size: 16px;">
+            </div>
+
+            <div>
+                <label>Cost per Unit (kWh) (Optional):</label>
+                <input type="number" id="input-cost" placeholder="e.g. 7.5" style="width: 100%; padding: 10px; margin-top: 5px; margin-bottom: 15px; border-radius: 5px; border: 1px solid #ccc; font-size: 16px;">
+            </div>
+
+            <button onclick="calculateEnergy()" style="width: 100%; padding: 12px; margin-top: 10px; background-color: #0056b3; color: white; border: none; border-radius: 5px; font-size: 16px; cursor: pointer; font-weight: bold;">Calculate Energy</button>
+
+            <!-- રિઝલ્ટ બોક્સ -->
+            <div id="result-box" style="margin-top: 20px; padding: 15px; background-color: #e2f0d9; border: 1px solid #c3e6cb; border-radius: 5px; text-align: center; font-size: 18px; color: #155724; display: none;">
+            </div>
+        </div>
+
+        <!-- Formula સેક્શન -->
+        <div class="calc-card" style="margin-top: 20px;">
+            <h3 style="margin-bottom: 15px;">📖 Formula </h3>
+            <p><strong>Energy (kWh)</strong> = (Power in Watts &times; Hours &times; Days) &divide; 1000</p>
+            <p><strong>Total Cost</strong> = Energy (kWh) &times; Cost per kWh</p>
+            <hr style="margin: 15px 0; border: 0; border-top: 1px solid #eee;">
+            <p style="font-size: 14px; color: #555;"><strong>1 kWh</strong> = 1 Unit of Electricity</p>
+        </div>
+    </main>
+
+    <script>
+        function calculateEnergy() {
+            const unit = document.getElementById('power-unit').value;
+            const power = parseFloat(document.getElementById('input-power').value);
+            const hours = parseFloat(document.getElementById('input-hours').value);
+            const days = parseFloat(document.getElementById('input-days').value);
+            const costPerUnit = parseFloat(document.getElementById('input-cost').value);
+            const resultBox = document.getElementById('result-box');
+
+            if (isNaN(power) || isNaN(hours) || isNaN(days)) {
+                alert("Please enter Power, Hours, and Days!");
+                return;
+            }
+
+            if (hours > 24) {
+                alert("Hours per day cannot be more than 24!");
+                return;
+            }
+
+            // Power ને kW માં ફેરવવું
+            let powerKW = power;
+            if (unit === 'w') {
+                powerKW = power / 1000;
+            }
+
+            // Energy Calculation (kWh = kW * hours * days)
+            const energyKWH = powerKW * hours * days;
+
+            let resultText = `<strong>Energy Consumed:</strong><br><span style="font-size: 24px;">${energyKWH.toFixed(2)} kWh (Units)</span>`;
+
+            // જો Cost નાખી હોય તો બિલ પણ ગણવું
+            if (!isNaN(costPerUnit)) {
+                const totalCost = energyKWH * costPerUnit;
+                resultText += `<br><br><strong>Total Cost:</strong><br><span style="font-size: 20px; color: #d9534f;">₹ ${totalCost.toFixed(2)}</span>`;
+            }
+
+            resultBox.innerHTML = resultText;
+            resultBox.style.display = 'block';
+        }
+    </script>
+</body>
+</html>
